@@ -1,0 +1,8 @@
+# Packages folder
+*/node_modules/
+
+# Typescript transpiled path
+*/dist/
+
+# Environment file
+*/.env

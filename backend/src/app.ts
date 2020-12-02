@@ -1,6 +1,7 @@
 import "make-promises-safe"
 import dotenv from "dotenv"
 import fastify from "fastify"
+import fastifyCookies from "fastify-cookie"
 
 dotenv.config({
   path: `.env`,
@@ -15,6 +16,8 @@ const server = fastify({
 })
 
 server.decorate("knex", knex)
+
+server.register(fastifyCookies)
 
 server.register(authenticate)
 
@@ -41,6 +44,8 @@ server.setErrorHandler(async (error, _req, reply) => {
       detail,
     }
   }
+
+  console.error(error)
 
   reply.status(500)
 

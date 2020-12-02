@@ -53,7 +53,36 @@ describe("app index", () => {
       .expect(406)
       .expect({
         statusCode: 406,
-        error: "Database Query Not Accept"
+        error: "Database Query Not Accept",
+      })
+      .end(done)
+  })
+
+  it.only("should query to /login and recieved 200 with statusCode, message", async done => {
+    const dbTracker = mockKnex.getTracker()
+
+    dbTracker.install()
+
+    dbTracker.on("query", function (query) {
+      query.response([
+        {
+          id: "someid",
+          username: "john",
+          password: "xxxxxx",
+          iat: new Date(),
+        },
+      ])
+    })
+
+    request(fastify.server)
+      .post("/login")
+      .send({ username: "john", password: "xxxxxx" })
+      .set("Accept", "application/json")
+      .expect(200)
+      .expect({
+        statusCode: 200,
+        message: "Login Successfully",
+        accessToken: "aaaa.bbbb.cccc",
       })
       .end(done)
   })

@@ -127,5 +127,38 @@ describe("helper/const", () => {
         })
       })
     })
+
+    describe("service unavailable", () => {
+      it("should return with default service unavailable object", () => {
+        expect(response.httpError.serviceUnavailable()).toStrictEqual({
+          statusCode: 503,
+          error: "Service Unavailable",
+        })
+      })
+
+      it("should return with custom service unavailable message", () => {
+        const customMessage = "Client Service Unavailable"
+
+        expect(
+          response.httpError.serviceUnavailable(customMessage)
+        ).toStrictEqual({
+          statusCode: 503,
+          error: customMessage,
+        })
+      })
+
+      it("should return with default service unavailable object with extra field", () => {
+        expect(
+          response.httpError.serviceUnavailable(
+            response.httpError.DEFAULT_MESSAGE.SERVICE_UNAVAILABLE,
+            { detail: "test" }
+          )
+        ).toStrictEqual({
+          statusCode: 503,
+          error: "Service Unavailable",
+          detail: "test",
+        })
+      })
+    })
   })
 })

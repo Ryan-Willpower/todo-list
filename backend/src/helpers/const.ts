@@ -12,6 +12,7 @@ export const response = {
       BAD_REQUEST: "Bad Request",
       NOT_FOUND: "Not Found",
       NOT_ACCEPTABLE: "Not Acceptable",
+      SERVICE_UNAVAILABLE: "Service Unavailable",
     },
     badRequest(message: string = "Bad Request", args?: { [key: string]: any }) {
       return constructErrorMessage(400, message, args)
@@ -24,6 +25,12 @@ export const response = {
       args?: { [key: string]: any }
     ) {
       return constructErrorMessage(406, message, args)
+    },
+    serviceUnavailable(
+      message: string = "Service Unavailable",
+      args?: { [key: string]: any }
+    ) {
+      return constructErrorMessage(503, message, args)
     },
   },
 }

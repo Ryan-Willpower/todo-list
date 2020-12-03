@@ -1,4 +1,4 @@
-import {generatePassword} from '../generate-password'
+import { generatePassword } from "../../helpers/generate-password"
 
 describe("helper/generatePassword", () => {
   it("should has type `string`", () => {

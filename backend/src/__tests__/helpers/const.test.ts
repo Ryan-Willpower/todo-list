@@ -1,4 +1,4 @@
-import { response } from "../const"
+import { response } from "../../helpers/const"
 
 describe("helper/const", () => {
   describe("response/httpSuccess", () => {

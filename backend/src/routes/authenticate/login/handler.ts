@@ -1,12 +1,12 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import bcrypt from "bcrypt"
-import * as jwt from "jsonwebtoken"
 
 import { IAuthorTable } from "../../../@types/db"
 import { ILoginBody } from "../../../@types/routes/authenticate"
 import { response } from "../../../helpers/const"
 import knex from "../../../helpers/init-db"
-import { generatePassword } from "../../../helpers/generate-password"
+import { generateAccessToken } from "../../../helpers/generate-access-token"
+import { generateRefreshToken } from "../../../helpers/generate-refresh-token"
 
 export async function login(
   req: FastifyRequest<{
@@ -14,7 +14,7 @@ export async function login(
   }>,
   res: FastifyReply
 ) {
-  const data = await knex
+  const users = await knex
     .select("username", "password")
     .from<IAuthorTable>("authors")
     .where({
@@ -26,55 +26,30 @@ export async function login(
       return response.httpError.serviceUnavailable()
     })
 
-  if (data.length === 0) {
+  if (users.length === 0) {
+    res.status(404)
+
     return response.httpError.notFound()
   }
 
-  const validUser = data.find(async user => {
+  const validUser = users.find(async user => {
     return await bcrypt.compare(req.body.password, user.password)
   })
 
   if (!validUser) {
+    res.status(404)
+
     return response.httpError.notFound()
   }
 
-  const accessTokenPayload = {
-    author: validUser.username,
-    type: "access",
-  }
+  const accessToken = generateAccessToken(validUser.username)
 
-  const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as jwt.Secret
-  const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as jwt.Secret
-
-  const accessToken = jwt.sign(accessTokenPayload, accessTokenSecret, {
-    expiresIn: "15 minutes",
-  })
-
-  const salt = await bcrypt.genSalt()
-  const randomString = generatePassword()
-  const keyHash = await bcrypt.hash(
-    `${validUser.username}${randomString}`,
-    salt
-  )
-
-  const refreshTokenPayload = {
-    username: validUser.username,
-    key: keyHash,
-    type: "refresh",
-  }
-
-  const refreshToken = jwt.sign(refreshTokenPayload, refreshTokenSecret, {
-    expiresIn: "2 weeks",
-  })
-
-  console.log(refreshToken)
-
-  const refreshTokenHash = await bcrypt.hash(refreshToken, salt)
+  const refreshToken = await generateRefreshToken(validUser.username)
 
   knex<IAuthorTable>("authors")
     .where("username", "=", validUser.username)
     .update({
-      refresh_token: refreshTokenHash,
+      refresh_token: refreshToken,
     })
     .on("query-error", () => {
       res.status(503)

@@ -10,10 +10,12 @@
   "author": "Ryan Willpower <surasak.c.work@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "apollo-server-fastify": "^2.19.0",
+    "apollo-server-fastify": "^3.0.0-alpha.3",
     "bcrypt": "^5.0.0",
     "fastify": "^3.8.0",
     "fastify-cookie": "^4.1.0",
+    "graphql": "^15.4.0",
+    "graphql-tools": "^7.0.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.12",
     "make-promises-safe": "^5.1.0",

@@ -1,15 +1,23 @@
 import "make-promises-safe"
+
 import dotenv from "dotenv"
-import fastify from "fastify"
-import fastifyCookies from "fastify-cookie"
 
 dotenv.config({
   path: `.env`,
 })
 
+import fastify, { FastifyRequest } from "fastify"
+import fastifyCookies from "fastify-cookie"
+import { ApolloServer, AuthenticationError } from "apollo-server-fastify"
+import * as jwt from "jsonwebtoken"
+
 import knex from "./helpers/init-db"
 import authenticate from "./routes/authenticate"
 import KnexError from "./helpers/knex-error"
+import typeDefs from "./typedefs"
+import cards from "./resolvers/cards"
+import cardStatus from "./resolvers/card-status"
+import { context } from "./helpers/graphql-context"
 
 const server = fastify({
   logger: true,
@@ -20,6 +28,14 @@ server.decorate("knex", knex)
 server.register(fastifyCookies)
 
 server.register(authenticate)
+
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers: [cards, cardStatus],
+  context,
+})
+
+server.register(apolloServer.createHandler())
 
 server.setErrorHandler(async (error, _req, reply) => {
   if (error.validation) {

@@ -55,10 +55,14 @@ describe("app index", () => {
         statusCode: 406,
         error: "Database Query Not Accept",
       })
-      .end(done)
+      .end(() => {
+        dbTracker.uninstall()
+
+        done()
+      })
   })
 
-  it.only("should query to /login and recieved 200 with statusCode, message", async done => {
+  it("should query to /login and recieved 200 with statusCode, message", async done => {
     const dbTracker = mockKnex.getTracker()
 
     dbTracker.install()
@@ -84,6 +88,10 @@ describe("app index", () => {
         message: "Login Successfully",
         accessToken: "aaaa.bbbb.cccc",
       })
-      .end(done)
+      .end(() => {
+        dbTracker.uninstall()
+
+        done()
+      })
   })
 })

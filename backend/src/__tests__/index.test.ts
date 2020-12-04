@@ -1,10 +1,13 @@
 import request from "supertest"
 import mockKnex from "mock-knex"
+import * as jwt from "jsonwebtoken"
 
 import fastify from "../app"
 import db from "../helpers/init-db"
 
 jest.mock("../helpers/generate-password")
+
+const dbTracker = mockKnex.getTracker()
 
 beforeAll(async () => {
   await fastify.ready()
@@ -12,9 +15,11 @@ beforeAll(async () => {
 
 beforeEach(() => {
   mockKnex.mock(db)
+  dbTracker.install()
 })
 
 afterEach(() => {
+  dbTracker.uninstall()
   mockKnex.unmock(db)
 })
 
@@ -24,6 +29,10 @@ afterAll(async () => {
 
 describe("app index", () => {
   it("should query to /register and recieved 200 success with expected response field", async done => {
+    dbTracker.on("query", function (query) {
+      query.response({})
+    })
+
     request(fastify.server)
       .post("/register")
       .send({ username: "john" })
@@ -38,10 +47,6 @@ describe("app index", () => {
   })
 
   it("should query to /register and recieved 406 when send an exist name to a server", async done => {
-    const dbTracker = mockKnex.getTracker()
-
-    dbTracker.install()
-
     dbTracker.on("query", query => {
       query.reject("Key (username)=(john) is already exist")
     })
@@ -55,18 +60,10 @@ describe("app index", () => {
         statusCode: 406,
         error: "Database Query Not Accept",
       })
-      .end(() => {
-        dbTracker.uninstall()
-
-        done()
-      })
+      .end(done)
   })
 
   it("should query to /login and recieved 200 with statusCode, message", async done => {
-    const dbTracker = mockKnex.getTracker()
-
-    dbTracker.install()
-
     dbTracker.on("query", function (query) {
       query.response([
         {
@@ -88,10 +85,49 @@ describe("app index", () => {
         message: "Login Successfully",
         accessToken: "aaaa.bbbb.cccc",
       })
-      .end(() => {
-        dbTracker.uninstall()
+      .end(done)
+  })
 
-        done()
+  it("should query to /refresh and recieved 200 with statusCode", async done => {
+    jest.spyOn(jwt, "decode").mockReturnValue({
+      author: "john",
+      type: "access",
+      iat: new Date(),
+      exp: new Date(),
+    })
+
+    jest.spyOn(jwt, "verify").mockImplementation(() => ({
+      username: "john",
+      type: "refresh",
+      key: "somekey",
+      iat: new Date(),
+      exp: new Date(),
+    }))
+
+    const twoWeeksInMS = 1000 * 60 * 60 * 24 * 14
+    const date = new Date(new Date().getTime() + twoWeeksInMS).toISOString()
+
+    dbTracker.on("query", function (query, step) {
+      ;[
+        () => query.response([{ refresh_token: "mmmm.nnnn.oooo" }]),
+        () => query.response({}),
+      ][step - 1]()
+    })
+
+    request(fastify.server)
+      .post("/refresh")
+      .send({ accessToken: "aaaa.bbbb.cccc" })
+      .set("Accept", "application/json")
+      .set("Cookie", [
+        "refresh_token=mmmm.nnnn.oooo",
+        `refresh_token_expiry=${date}`,
+      ])
+      .expect(200)
+      .expect({
+        statusCode: 200,
+        message: "Success",
+        accessToken: "aaaa.bbbb.cccc",
       })
+      .end(done)
   })
 })

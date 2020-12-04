@@ -10,12 +10,19 @@ export const response = {
   httpError: {
     DEFAULT_MESSAGE: {
       BAD_REQUEST: "Bad Request",
+      NOT_AUTHORIZE: "Not Authorize",
       NOT_FOUND: "Not Found",
       NOT_ACCEPTABLE: "Not Acceptable",
       SERVICE_UNAVAILABLE: "Service Unavailable",
     },
     badRequest(message: string = "Bad Request", args?: { [key: string]: any }) {
       return constructErrorMessage(400, message, args)
+    },
+    notAuthorize(
+      message: string = "Not Authorize",
+      args?: { [key: string]: any }
+    ) {
+      return constructErrorMessage(401, message, args)
     },
     notFound(message: string = "Not Found", args?: { [key: string]: any }) {
       return constructErrorMessage(404, message, args)

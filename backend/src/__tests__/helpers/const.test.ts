@@ -66,6 +66,37 @@ describe("helper/const", () => {
       })
     })
 
+    describe("not authorize", () => {
+      it("should return with default not authorize object", () => {
+        expect(response.httpError.notAuthorize()).toStrictEqual({
+          statusCode: 401,
+          error: "Not Authorize",
+        })
+      })
+
+      it("should return with custom not authorize message", () => {
+        const customMessage = "Client Not Authorize"
+
+        expect(response.httpError.notAuthorize(customMessage)).toStrictEqual({
+          statusCode: 401,
+          error: customMessage,
+        })
+      })
+
+      it("should return with default not authorize object with extra field", () => {
+        expect(
+          response.httpError.notAuthorize(
+            response.httpError.DEFAULT_MESSAGE.NOT_AUTHORIZE,
+            { detail: "test" }
+          )
+        ).toStrictEqual({
+          statusCode: 401,
+          error: "Not Authorize",
+          detail: "test",
+        })
+      })
+    })
+
     describe("not found", () => {
       it("should return with default not found object", () => {
         expect(response.httpError.notFound()).toStrictEqual({

@@ -6,10 +6,9 @@ dotenv.config({
   path: `.env`,
 })
 
-import fastify, { FastifyRequest } from "fastify"
+import fastify from "fastify"
 import fastifyCookies from "fastify-cookie"
-import { ApolloServer, AuthenticationError } from "apollo-server-fastify"
-import * as jwt from "jsonwebtoken"
+import { ApolloServer } from "apollo-server-fastify"
 
 import knex from "./helpers/init-db"
 import authenticate from "./routes/authenticate"

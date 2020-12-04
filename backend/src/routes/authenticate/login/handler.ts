@@ -46,7 +46,7 @@ export async function login(
 
   const refreshToken = await generateRefreshToken(validUser.username)
 
-  knex<IAuthorTable>("authors")
+  await knex<IAuthorTable>("authors")
     .where("username", "=", validUser.username)
     .update({
       refresh_token: refreshToken,

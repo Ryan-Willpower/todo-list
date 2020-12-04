@@ -61,12 +61,12 @@ export async function login(
 
   res.setCookie("refresh_token", refreshToken, {
     httpOnly: true,
-    path: "/refresh-token",
+    path: "/refresh",
   })
   res.setCookie(
     "refresh_token_expiry",
     new Date(new Date().getTime() + twoWeeksInMS).toISOString(),
-    { httpOnly: true, path: "/refresh-token" }
+    { httpOnly: true, path: "/refresh" }
   )
 
   return response.httpSuccess.success("Login Successfully", { accessToken })

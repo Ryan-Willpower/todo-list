@@ -6,3 +6,6 @@
 
 # Environment file
 */.env
+
+# Next build path
+*/.next

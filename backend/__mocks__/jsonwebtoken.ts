@@ -7,3 +7,4 @@ export const verify = jest.fn().mockReturnValue({
 })
 export const JsonWebTokenError = jest.requireActual("jsonwebtoken")
   .JsonWebTokenError
+export const decode = jest.fn()

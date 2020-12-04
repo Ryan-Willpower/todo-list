@@ -36,6 +36,7 @@ const dbResponse: { categories: ICategory; cards: ICard } = {
   cards: {
     id: "yyyy",
     author: context.id,
+    name: "Hello world",
     content: "Hello world",
     status: CARD_STATUS.ACTIVE,
     category: null,
@@ -44,6 +45,23 @@ const dbResponse: { categories: ICategory; cards: ICard } = {
 }
 
 describe("graphql/mutation/updateCard", () => {
+  it("should update status", async () => {
+    dbTracker.on("query", query => {
+      query.response([dbResponse.cards])
+    })
+
+    const updateCardResponse = await updateCard(
+      null,
+      {
+        id: "yyyy",
+        name: "Hello world",
+      },
+      context
+    )
+
+    expect(updateCardResponse).toStrictEqual(dbResponse.cards)
+  })
+
   it("should update content", async () => {
     dbTracker.on("query", query => {
       query.response([dbResponse.cards])
@@ -78,7 +96,7 @@ describe("graphql/mutation/updateCard", () => {
     expect(updateCardResponse).toStrictEqual(dbResponse.cards)
   })
 
-  it("should update status", async () => {
+  it("should update category", async () => {
     dbTracker.on("query", (query, step) => {
       ;[
         () => query.response([dbResponse.categories]),

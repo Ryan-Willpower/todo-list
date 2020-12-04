@@ -30,11 +30,13 @@ export const addCard = async (
   const card = category
     ? {
         author: context.id,
+        name: args.name,
         content: args.content,
         category: category.id,
       }
     : {
         author: context.id,
+        name: args.name,
         content: args.content,
       }
 

@@ -15,6 +15,10 @@ export const updateCard = async (
     id: args.id,
   }
 
+  if (args.name) {
+    updateQuery.name = args.name
+  }
+
   if (args.content) {
     updateQuery.content = args.content
   }

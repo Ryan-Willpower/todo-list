@@ -36,6 +36,7 @@ const dbResponse: { categories: ICategory; cards: ICard } = {
   cards: {
     id: "yyyy",
     author: context.id,
+    name: "Hello world",
     content: "Hello world",
     status: CARD_STATUS.ACTIVE,
     category: null,
@@ -52,7 +53,7 @@ describe("graphql/mutation/addCard", () => {
     const addCardResponse = await addCard(
       null,
       {
-        content: "Hello world",
+        name: "Hello world",
       },
       context
     )
@@ -74,6 +75,7 @@ describe("graphql/mutation/addCard", () => {
     const addCardResponse = await addCard(
       null,
       {
+        name: "Hello world",
         content: "Hello world",
         category: "test",
       },

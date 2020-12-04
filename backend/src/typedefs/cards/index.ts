@@ -4,8 +4,9 @@ export default gql`
   type Card {
     id: String!
     author: String!
+    name: String!
     status: CARD_STATUS!
-    content: String!
+    content: String
     category: String
     iat: String!
   }
@@ -15,9 +16,10 @@ export default gql`
   }
 
   type Mutation {
-    addCard(content: String!, category: String): Card
+    addCard(name: String!, content: String, category: String): Card
     updateCard(
       id: String!
+      name: String
       content: String
       category: String
       status: CARD_STATUS

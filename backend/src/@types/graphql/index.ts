@@ -1,10 +1,12 @@
 export interface IAddCardParams {
-  content: string
+  name: string
+  content?: string
   category?: string
 }
 
 export interface IUpdateCardParams {
   id: string
+  name?: string
   content?: string
   category?: string
   status?: CARD_STATUS
@@ -32,6 +34,7 @@ export enum CARD_STATUS {
 export interface ICard {
   id: string
   author: string
+  name: string
   status: CARD_STATUS
   content: string
   category?: string | null

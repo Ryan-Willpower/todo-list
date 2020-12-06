@@ -25,7 +25,10 @@ const server = fastify({
   logger: true,
 })
 
-server.register(fastifyCORS)
+server.register(fastifyCORS, {
+  origin: "http://localhost:3000",
+  credentials: true,
+})
 
 server.decorate("knex", knex)
 

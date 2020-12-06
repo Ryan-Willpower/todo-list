@@ -1,30 +1,19 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import * as jwt from "jsonwebtoken"
 import { IAuthorTable } from "../../../@types/db"
-import { IRequestPayload } from "../../../@types/helpers/graphql-context"
 
-import {
-  IRefreshTokenBody,
-  IRefreshTokenPayload,
-} from "../../../@types/routes/authenticate"
+import { IRefreshTokenPayload } from "../../../@types/routes/authenticate"
 import { response } from "../../../helpers/const"
 import { generateAccessToken } from "../../../helpers/generate-access-token"
 import { generateRefreshToken } from "../../../helpers/generate-refresh-token"
 import knex from "../../../helpers/init-db"
 
-export async function refreshToken(
-  req: FastifyRequest<{
-    Body: IRefreshTokenBody
-  }>,
-  res: FastifyReply
-) {
+export async function refreshToken(req: FastifyRequest, res: FastifyReply) {
   if (!req?.cookies?.refresh_token && !req?.cookies?.refresh_token_expiry) {
     res.status(401)
 
     return response.httpError.notAuthorize()
   }
-
-  const accessTokenPayload = jwt.decode(req.body.accessToken) as IRequestPayload
 
   const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as jwt.Secret
 
@@ -37,8 +26,6 @@ export async function refreshToken(
     ) as IRefreshTokenPayload
 
     checkTokenType(refreshTokenPayload.type)
-
-    checkTokenOwner(accessTokenPayload.author, refreshTokenPayload.username)
 
     const refreshTokenFromDatabase = await knex<IAuthorTable>("authors")
       .select(["refresh_token"])
@@ -85,6 +72,7 @@ export async function refreshToken(
       new Date(new Date().getTime() + twoWeeksInMS).toISOString(),
       { httpOnly: true, path: "/refresh" }
     )
+    res.headers({ "Access-Control-Allow-Credentials": true })
 
     return response.httpSuccess.success(
       response.httpSuccess.DEFAULT_MESSAGE.SUCCESS,
@@ -111,12 +99,6 @@ function checkTokenExpire(expireDate: string) {
 function checkTokenType(type: string) {
   if (type !== "refresh") {
     throw new Error("Invalid refresh token type")
-  }
-}
-
-function checkTokenOwner(tokenOwnerA: string, tokenOwnerB: string) {
-  if (tokenOwnerA !== tokenOwnerB) {
-    throw new Error("Invalid refresh token owner")
   }
 }
 

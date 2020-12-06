@@ -3,7 +3,15 @@ import Link from "next/link"
 
 export const NavBar: React.FC = () => {
   return (
-    <Box py={3} position="fixed" top="0" width={1}>
+    <Box
+      py={3}
+      position="fixed"
+      top="0"
+      width={1}
+      zIndex="2"
+      bgcolor="#fff"
+      boxShadow="0px 1px rgba(0,0,0,0.1)"
+    >
       <Container maxWidth="md">
         <Grid
           container

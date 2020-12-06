@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === "development") {
 import fastify from "fastify"
 import fastifyCookies from "fastify-cookie"
 import { ApolloServer } from "apollo-server-fastify"
+import fastifyCORS from "fastify-cors"
 
 import knex from "./helpers/init-db"
 import authenticate from "./routes/authenticate"
@@ -23,6 +24,8 @@ import { context } from "./helpers/graphql-context"
 const server = fastify({
   logger: true,
 })
+
+server.register(fastifyCORS)
 
 server.decorate("knex", knex)
 

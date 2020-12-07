@@ -2,11 +2,9 @@ import "make-promises-safe"
 
 import dotenv from "dotenv"
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({
-    path: `.env`,
-  })
-}
+dotenv.config({
+  path: `.env`,
+})
 
 import fastify from "fastify"
 import fastifyCookies from "fastify-cookie"
@@ -40,6 +38,8 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers: [cards, cardStatus],
   context,
+  playground: true,
+  introspection: true,
 })
 
 server.register(

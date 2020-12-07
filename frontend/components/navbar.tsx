@@ -1,7 +1,10 @@
 import { Box, Container, Grid, Link as StyledLink } from "@material-ui/core"
 import Link from "next/link"
+import { useUser } from "../utils/useUser"
 
 export const NavBar: React.FC = () => {
+  const user = useUser()
+
   return (
     <Box
       py={3}
@@ -30,13 +33,19 @@ export const NavBar: React.FC = () => {
             flexWrap="nowrap"
             alignItems="center"
           >
-            <Link href="/login">
-              <StyledLink>Login</StyledLink>
-            </Link>
-            <Box mx={2}>|</Box>
-            <Link href="/register">
-              <StyledLink>Register</StyledLink>
-            </Link>
+            {user ? (
+              <div>user: {user}</div>
+            ) : (
+              <>
+                <Link href="/login">
+                  <StyledLink>Login</StyledLink>
+                </Link>
+                <Box mx={2}>|</Box>
+                <Link href="/register">
+                  <StyledLink>Register</StyledLink>
+                </Link>
+              </>
+            )}
           </Box>
         </Grid>
       </Container>

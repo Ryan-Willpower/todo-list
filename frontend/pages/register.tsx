@@ -10,7 +10,7 @@ import { useWait } from "../utils/useWait"
 import { useRefreshToken } from "../utils/useRefreshToken"
 
 function RegisterPage() {
-  useRefreshToken()
+  useRefreshToken({ redirectTo: "/register" })
 
   const {
     userInput,

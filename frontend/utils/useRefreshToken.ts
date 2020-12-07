@@ -16,15 +16,20 @@ export function refetchToken() {
   )
 }
 
-export function useRefreshToken() {
+interface UseRefreshTokenProps {
+  redirectTo?: string
+}
+
+export function useRefreshToken(unauth?: UseRefreshTokenProps) {
   const { accessToken } = useContext(accessTokenContext) as IAccessTokenContext
   const router = useRouter()
+  const redirectTo = unauth?.redirectTo || "/login"
 
   useEffect(() => {
     if (accessToken) {
       router.push("/")
     } else {
-      router.push("/login")
+      router.push(redirectTo)
     }
   }, [])
 }

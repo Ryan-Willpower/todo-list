@@ -1,11 +1,17 @@
-import fastify from 'fastify'
+import { FastifyInstance } from "fastify"
 
-const server = fastify({
-  logger: true
-})
+import server from "./app"
 
-server.get('/', (_req, res) => {
-  res.send({status: "ok!"})
-})
+export async function startServer(server: FastifyInstance) {
+  try {
+    const port = process.env.PORT || 3000
+    const hostname = process.env.HOSTNAME || "localhost"
 
-server.listen(3000)
+    await server.listen(port, hostname)
+  } catch (err) {
+    server.log.error(err)
+    process.exit(1)
+  }
+}
+
+startServer(server)

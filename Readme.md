@@ -24,8 +24,6 @@ All stack are using `Typescript`
 
 ## Backend route
 
-Add some basic authentication included:
-
 - `POST /register` - generate user and return with a random password
 - `POST /login` - using username and password to log in and return with an access token and store a refresh token in cookies
 - `POST /refresh` - refresh the access token and generate the new refresh token
@@ -33,7 +31,80 @@ Add some basic authentication included:
 And included a card content (which using GraphQL):
 
 - `Query listCards` - list all the cards in a database
+
+```graphql
+query {
+  listCards {
+    id
+    name
+    content
+    category
+    status
+    iat
+  }
+}
+```
+
 - `Mutation addCard` - add the card
+
+```graphql
+mutation {
+  addCard {
+    status
+    message
+  }
+}
+```
+
 - `Mutation updateCard` - update the card's information
+
+```graphql
+mutation {
+  updateCard {
+    id
+    name
+    content
+    category
+    status
+    iat
+  }
+}
+```
+
 - `Mutation deleteCard` - remove the card
+
+```graphql
+mutation {
+  deleteCard {
+    status
+    message
+  }
+}
+```
+
 - `Mutation updateCardStatus` - update the card's status
+
+```graphql
+mutation {
+  updateCardStatus {
+    status
+    message
+  }
+}
+```
+
+## Frontend Folder Structure
+
+```
+/@types - typescript type definition
+/components - all components
+/pages - all site pages
+/styles - custom css
+/utils - utility function
+```
+
+## Frontend route
+
+- `/register` - generate user password
+- `/login` - using username and password to log in
+- `/` - main page (must login before access)

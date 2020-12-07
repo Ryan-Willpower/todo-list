@@ -7,7 +7,7 @@ import { accessTokenContext } from "./access-token-context"
 
 export function refetchToken() {
   return axios.post<ILoginResponse>(
-    "http://localhost:8000/refresh",
+    `${process.env.BACKEND_HOSTNAME}/refresh`,
     {},
     {
       withCredentials: true,

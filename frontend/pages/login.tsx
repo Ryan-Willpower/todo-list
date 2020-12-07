@@ -51,7 +51,7 @@ function LoginPage() {
       setErrorResponseStatus(false)
 
       const { data: loginResponse } = await axios.post<ILoginResponse>(
-        "http://localhost:8000/login",
+        `${process.env.BACKEND_HOSTNAME}/login`,
         {
           username: usernameInput,
           password: passwordInput,

@@ -37,7 +37,7 @@ function RegisterPage() {
       setLoadingStatus(true)
 
       const { data } = await axios.post<IRegisterResponse>(
-        "http://localhost:8000/register",
+        `${process.env.BACKEND_HOSTNAME}/register`,
         {
           username: userInput,
         },

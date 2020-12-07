@@ -81,7 +81,7 @@ export default function CustomApp({ Component, pageProps }: AppProps) {
   )
 
   const httpLink = new HttpLink({
-    uri: "http://localhost:8000/graphql",
+    uri: process.env.GRAPHQL_HOSTNAME,
   })
 
   const client = new ApolloClient({

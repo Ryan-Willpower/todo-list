@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+  todo-b:
+    container_name: todo-b
+    build: ./backend
+    ports:
+      - 8000:3000
+    networks:
+      - todo-network
+
+  todo-f:
+    container_name: todo-f
+    build: ./frontend
+    ports:
+      - 8880:3000
+    environment:
+      WAIT_HOSTS: todo-b:3000
+      WAIT_HOSTS_TIMEOUT: 300
+    networks:
+      - todo-network
+
+networks:
+  todo-network:
+    external: true

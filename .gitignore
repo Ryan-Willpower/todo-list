@@ -9,3 +9,4 @@
 
 # Next build path
 */.next
+*/.env.*

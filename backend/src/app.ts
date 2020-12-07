@@ -26,7 +26,7 @@ const server = fastify({
 })
 
 server.register(fastifyCORS, {
-  origin: "http://localhost:3000",
+  origin: process.env.FRONTEND_HOSTNAME,
   credentials: true,
 })
 
@@ -42,7 +42,14 @@ const apolloServer = new ApolloServer({
   context,
 })
 
-server.register(apolloServer.createHandler())
+server.register(
+  apolloServer.createHandler({
+    cors: {
+      origin: process.env.FRONTEND_HOSTNAME,
+      credentials: true,
+    },
+  })
+)
 
 server.setErrorHandler(async (error, _req, reply) => {
   if (error.validation) {

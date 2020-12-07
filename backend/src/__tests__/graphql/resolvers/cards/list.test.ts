@@ -1,4 +1,5 @@
 import mockKnex from "mock-knex"
+import { IAppContext } from "../../../../@types/graphql"
 
 import db from "../../../../helpers/init-db"
 import { listCards } from "../../../../resolvers/cards/queries/list"
@@ -36,13 +37,18 @@ const dbResponse = [
   ],
 ]
 
+const context: IAppContext = {
+  id: "someid",
+  author: "john",
+}
+
 describe("resolvers/query/listCards", () => {
   it("should get all cards", async () => {
     dbTracker.on("query", function (query) {
       query.response(dbResponse)
     })
 
-    const listCardResponse = await listCards()
+    const listCardResponse = await listCards(null, null, context)
 
     expect(listCardResponse).toStrictEqual(dbResponse)
   })

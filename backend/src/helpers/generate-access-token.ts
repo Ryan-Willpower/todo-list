@@ -9,7 +9,7 @@ export function generateAccessToken(username: string): string {
   }
 
   const accessTokenOptions = {
-    expiresIn: "15 minutes",
+    expiresIn: "30 minutes",
   }
 
   const accessToken = jwt.sign(

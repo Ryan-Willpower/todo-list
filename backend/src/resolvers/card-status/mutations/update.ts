@@ -14,12 +14,12 @@ export const updateCardStatus = async (
 ): Promise<QueryStatus> => {
   try {
     await knex<ICard>("cards")
-      .update({
-        status: args.status,
-      })
       .where({
         id: args.id,
         author: context.id,
+      })
+      .update({
+        status: args.status,
       })
 
     return {

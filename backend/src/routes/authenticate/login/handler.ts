@@ -68,6 +68,7 @@ export async function login(
     new Date(new Date().getTime() + twoWeeksInMS).toISOString(),
     { httpOnly: true, path: "/refresh" }
   )
+  res.headers({ "Access-Control-Allow-Credentials": true })
 
   return response.httpSuccess.success("Login Successfully", { accessToken })
 }

@@ -4,6 +4,7 @@ import {
   IAppContext,
   ICard,
   ICategory,
+  CARD_STATUS,
 } from "../../../@types/graphql"
 
 export const updateCard = async (
@@ -11,9 +12,12 @@ export const updateCard = async (
   args: IUpdateCardParams,
   context: IAppContext
 ): Promise<ICard> => {
-  const updateQuery: IUpdateCardParams = {
-    id: args.id,
-  }
+  const updateQuery: {
+    name?: string
+    content?: string
+    status?: CARD_STATUS
+    category?: string
+  } = {}
 
   if (args.name) {
     updateQuery.name = args.name
@@ -42,11 +46,11 @@ export const updateCard = async (
   }
 
   const cardResponse = await knex<ICard>("cards")
-    .update(updateQuery)
     .where({
       id: args.id,
       author: context.id,
     })
+    .update(updateQuery)
     .returning("*")
 
   return cardResponse[0]

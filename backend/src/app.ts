@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === "development") {
 import fastify from "fastify"
 import fastifyCookies from "fastify-cookie"
 import { ApolloServer } from "apollo-server-fastify"
+import fastifyCORS from "fastify-cors"
 
 import knex from "./helpers/init-db"
 import authenticate from "./routes/authenticate"
@@ -22,6 +23,11 @@ import { context } from "./helpers/graphql-context"
 
 const server = fastify({
   logger: true,
+})
+
+server.register(fastifyCORS, {
+  origin: process.env.FRONTEND_HOSTNAME,
+  credentials: true,
 })
 
 server.decorate("knex", knex)
@@ -36,7 +42,14 @@ const apolloServer = new ApolloServer({
   context,
 })
 
-server.register(apolloServer.createHandler())
+server.register(
+  apolloServer.createHandler({
+    cors: {
+      origin: process.env.FRONTEND_HOSTNAME,
+      credentials: true,
+    },
+  })
+)
 
 server.setErrorHandler(async (error, _req, reply) => {
   if (error.validation) {

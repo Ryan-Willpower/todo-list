@@ -68,7 +68,6 @@ function LoginPage() {
 
       router.push("/")
     } catch (error) {
-      console.log(error.response)
       setErrorResponseStatus(true)
     }
   }

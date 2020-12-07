@@ -39,7 +39,6 @@ export const StatusSwitch: React.FC<IStatusSwitchProps> = ({
     })
 
     if (!data) {
-      console.log("call again")
       await updateCard({
         variables: {
           id,

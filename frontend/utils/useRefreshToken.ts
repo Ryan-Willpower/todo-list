@@ -20,18 +20,6 @@ export function useRefreshToken() {
   const { accessToken } = useContext(accessTokenContext) as IAccessTokenContext
   const router = useRouter()
 
-  // useEffect(() => {
-  //   console.log("call refresh token")
-  //   refetchToken()
-  //     .then(({ data }) => {
-  //       setAccessToken(data.accessToken)
-  //       router.push("/")
-  //     })
-  //     .catch(() => {
-  //       router.push("/login")
-  //     })
-  // }, [])
-
   useEffect(() => {
     if (accessToken) {
       router.push("/")
